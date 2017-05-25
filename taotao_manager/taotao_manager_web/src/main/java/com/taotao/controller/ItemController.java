@@ -3,7 +3,7 @@ package com.taotao.controller;
 import com.taotao.pojo.EasyUIDataGridResult;
 import com.taotao.pojo.TbItem;
 import com.taotao.service.ItemService;
-import com.taotao.utils.TaotaoResult;
+import com.taotao.pojo.TaotaoResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +28,11 @@ public class ItemController {
 		return tbItem;
 	}
 
+	/**
+	 * 展示所有商品
+	 * @param page 分页第几页
+	 * @param rows 分页每页多少
+	 */
 	@RequestMapping("/list")
 	@ResponseBody
 	public EasyUIDataGridResult getItemList(Integer page, Integer rows) {
@@ -35,10 +40,18 @@ public class ItemController {
 		return result;
 	}
 
+	/**
+	 * 添加单个商品
+	 * @param item 商品信息
+	 * @param desc 商品描述(因为商品描述与商品表分开)
+	 * @param itemParams
+	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
 	public TaotaoResult createItem(TbItem item, String desc, String itemParams) throws Exception {
 		TaotaoResult result = itemService.createItem(item, desc, itemParams);
+		// 添加索引库
+		result = itemService.addOrUpdateItem((String) result.getData());
 		return result;
 	}
 }

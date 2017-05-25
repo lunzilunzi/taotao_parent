@@ -7,13 +7,17 @@ import com.taotao.mapper.TbItemMapper;
 import com.taotao.mapper.TbItemParamItemMapper;
 import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
+import com.taotao.utils.HttpClientUtil;
 import com.taotao.utils.IDUtils;
-import com.taotao.utils.TaotaoResult;
+import com.taotao.pojo.TaotaoResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品管理Service
@@ -23,12 +27,17 @@ public class ItemServiceImpl implements ItemService {
 
 	@Autowired
 	private TbItemMapper itemMapper;
-
 	@Autowired
 	private TbItemDescMapper itemDescMapper;
-
 	@Autowired
 	private TbItemParamItemMapper itemParamItemMapper;
+
+	@Value("${SOLR_BASE_URL}")
+	private String SOLR_BASE_URL;
+	@Value("${SOLR_REMOVE_URL}")
+	private String SOLR_REMOVE_URL;
+	@Value("${SOLR_UPDATE_URL}")
+	private String SOLR_UPDATE_URL;
 
 	@Override
 	public TbItem getItemById(long itemId) {
@@ -73,6 +82,15 @@ public class ItemServiceImpl implements ItemService {
 		return result;
 	}
 
+	/**
+	 * 添加商品
+	 * @param item 商品对象
+	 * @param desc 商品详情
+	 * @param itemParam 商品规格信息
+	 * @return
+	 * @throws Exception
+	 */
+
 	@Override
 	public TaotaoResult createItem(TbItem item, String desc, String itemParam) throws Exception {
 		// item补全
@@ -98,7 +116,8 @@ public class ItemServiceImpl implements ItemService {
 			throw new Exception();
 		}
 
-		return  TaotaoResult.ok();
+
+		return  TaotaoResult.ok(itemId+"");
 	}
 
 	/**
@@ -116,6 +135,25 @@ public class ItemServiceImpl implements ItemService {
 		itemDescMapper.insert(itemDesc);
 
 		return TaotaoResult.ok();
+	}
+
+	/**
+	 * 添加field至索引库
+	 * @param itemId 商品id
+	 */
+	@Override
+	public TaotaoResult addOrUpdateItem(String itemId) throws Exception {
+
+		// 添加field到solr索引库
+		Map<String, String> param = new LinkedHashMap<>();
+		param.put("id", itemId);
+		String json = HttpClientUtil.doGet(SOLR_BASE_URL + SOLR_UPDATE_URL, param);
+		TaotaoResult result = TaotaoResult.formatToPojo(json, null);
+
+		if (result.getStatus() != 200) {
+			throw new Exception();
+		}
+		return result;
 	}
 
 	/**

@@ -26,14 +26,11 @@ public class ItemCatServiceImpl implements ItemCatService {
 	public List<EasyUITreeNode> getItemCatList(Long parentId) {
 		// 根据parentId查询分类列表
 		TbItemCatExample example = new TbItemCatExample();
-
 		// 设置查询条件
 		TbItemCatExample.Criteria criteria = example.createCriteria();
 		criteria.andParentIdEqualTo(parentId);
-
 		// 执行查询条件
 		List<TbItemCat> list = itemCatMapper.selectByExample(example);
-
 		// 转化为EasyUITreeNode列表
 		List<EasyUITreeNode> resultList = new ArrayList<>();
 		for (TbItemCat tbItemCat : list) {

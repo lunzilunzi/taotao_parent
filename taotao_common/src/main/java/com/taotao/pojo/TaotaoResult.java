@@ -1,4 +1,4 @@
-package com.taotao.utils;
+package com.taotao.pojo;
 
 import java.util.List;
 
@@ -99,6 +99,7 @@ public class TaotaoResult {
             Object obj = null;
             if (clazz != null) {
                 if (data.isObject()) {
+//                    MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                     obj = MAPPER.readValue(data.traverse(), clazz);
                 } else if (data.isTextual()) {
                     obj = MAPPER.readValue(data.asText(), clazz);

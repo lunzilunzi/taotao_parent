@@ -2,7 +2,7 @@ package com.taotao.service;
 
 import com.taotao.pojo.EasyUIDataGridResult;
 import com.taotao.pojo.TbItemParam;
-import com.taotao.utils.TaotaoResult;
+import com.taotao.pojo.TaotaoResult;
 
 public interface ItemParamService {
 	TaotaoResult getItemParamByCid(long cid);

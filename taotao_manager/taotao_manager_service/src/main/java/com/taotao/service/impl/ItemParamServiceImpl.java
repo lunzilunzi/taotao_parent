@@ -7,7 +7,7 @@ import com.taotao.pojo.EasyUIDataGridResult;
 import com.taotao.pojo.TbItemParam;
 import com.taotao.pojo.TbItemParamExample;
 import com.taotao.service.ItemParamService;
-import com.taotao.utils.TaotaoResult;
+import com.taotao.pojo.TaotaoResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
 package com.taotao.service.impl;
 
+import com.taotao.pojo.PictureResult;
 import com.taotao.service.PictureService;
 import com.taotao.utils.FtpUtil;
 import com.taotao.utils.IDUtils;
@@ -40,8 +41,8 @@ public class PictureServiceImpl implements PictureService {
 	private String IMAGE_BASE_URL;
 
 	@Override
-	public Map uploadPicture(MultipartFile uploadFile) {
-		Map resultMap = new HashMap();
+	public PictureResult uploadPicture(MultipartFile uploadFile) {
+		PictureResult pictureResult = new PictureResult();
 
 		try {
 			// 生成一个新的文件名
@@ -63,21 +64,21 @@ public class PictureServiceImpl implements PictureService {
 
 			// 返回结果
 			if (!result) {
-				resultMap.put("error", 1);
-				resultMap.put("message", "文件上传失败");
-				return resultMap;
+				pictureResult.setError(1);
+				pictureResult.setMessage("文件上传失败");
+				return pictureResult;
 			}
 
 			System.out.println("图片URL: " + IMAGE_BASE_URL+filePath+"/"+newName);
 
-			resultMap.put("error", 0);
-			resultMap.put("url", IMAGE_BASE_URL+filePath+"/"+newName);
+			pictureResult.setError(0);
+			pictureResult.setUrl(IMAGE_BASE_URL+filePath+"/"+newName);
 
-			return resultMap;
+			return pictureResult;
 		} catch (IOException e) {
-			resultMap.put("error", 1);
-			resultMap.put("message", "文件上传发生异常");
-			return resultMap;
+			pictureResult.setError(1);
+			pictureResult.setMessage("文件上传发生异常");
+			return pictureResult;
 		}
 	}
 }

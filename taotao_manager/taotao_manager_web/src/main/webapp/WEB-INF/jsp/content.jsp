@@ -29,6 +29,17 @@ $(function(){
 	var tree = $("#contentCategoryTree");
 	var datagrid = $("#contentList");
 	tree.tree({
+		// 在异步tree加载成功后,循环打开每个节点
+		onLoadSuccess: function (node, data) {
+			var t = $(this);
+			if (data) {
+				$(data).each(function (index, d) {
+					if (this.state == 'closed') {
+						t.tree('expandAll');
+					}
+				});
+			}
+		},
 		onClick : function(node){
 			if(tree.tree("isLeaf",node.target)){
 				datagrid.datagrid('reload', {
